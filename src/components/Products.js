@@ -1,18 +1,28 @@
 import React, { Component, Fragment } from 'react';
 import Product from './Product';
-import axios from "axios";
+import axios from "axios"; // for http
 const config = require('../config.json');
 
 export default class Products extends Component {
 
   state = {
-    newproduct: null,
+    newproduct: {
+      "productname": "",
+      "id": ""
+    },
     products: []
   }
 
-  fetchProducts = () => {
+  fetchProducts = async () => {
     // add call to AWS API Gateway to fetch products here
     // then set them in state
+    try{
+      const res = await axios.get(`${config.api.invokeUrl}/products`);
+      this.setState({products:res.data});
+    }catch(err){
+      console.log(`An error occured: ${err}`);
+    }
+    
   }
 
   componentDidMount = () => {
